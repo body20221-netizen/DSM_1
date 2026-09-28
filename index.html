@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Science Methodology — Final Exam Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #f4f7fb;
+    --panel: #ffffff;
+    --panel-2: #eef3fa;
+    --ink: #1c2b3a;
+    --ink-soft: #55677a;
+    --line: #dde6f0;
+    --brand: #2457c5;
+    --brand-2: #1a3f96;
+    --brand-soft: #e8effc;
+    --good: #178a4c;
+    --good-bg: #e6f6ec;
+    --bad: #c23b3b;
+    --bad-bg: #fdecec;
+    --easy: #178a4c;
+    --easy-bg: #e6f6ec;
+    --medium: #b3790c;
+    --medium-bg: #fdf3df;
+    --hard: #c23b3b;
+    --hard-bg: #fdecec;
+    --shadow: 0 10px 30px rgba(28,43,58,0.08), 0 2px 6px rgba(28,43,58,0.06);
+    --radius: 16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1100px 500px at 90% -10%, #e4edfb 0%, transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, #eaf1fb 0%, transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Source Sans 3', -apple-system, Segoe UI, Roboto, sans-serif;
+    min-height:100vh;
+    padding:32px 16px 64px;
+  }
+  h1,h2,h3,.brand,.qnum,.btn,.score-num{font-family:'Lexend', 'Source Sans 3', sans-serif;}
+
+  .wrap{max-width:880px;margin:0 auto;}
+
+  /* Header */
+  header{
+    background:linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+    border-radius: var(--radius);
+    padding:28px 30px;
+    color:#fff;
+    box-shadow: var(--shadow);
+    margin-bottom:22px;
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";
+    position:absolute; right:-60px; top:-60px;
+    width:220px; height:220px; border-radius:50%;
+    background:rgba(255,255,255,0.08);
+  }
+  header .eyebrow{
+    font-size:12.5px; letter-spacing:.14em; text-transform:uppercase;
+    opacity:.85; font-weight:600; margin-bottom:6px;
+  }
+  header h1{font-size:24px; margin:0 0 6px; font-weight:700; line-height:1.25;}
+  header p{margin:0; opacity:.92; font-size:14.5px; max-width:60ch;}
+
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap:10px; margin-top:18px;
+  }
+  .pill{
+    background:rgba(255,255,255,0.14);
+    border:1px solid rgba(255,255,255,0.25);
+    padding:6px 12px; border-radius:999px; font-size:12.5px; font-weight:600;
+  }
+
+  /* Progress */
+  .progress-shell{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:999px;
+    height:10px;
+    overflow:hidden;
+    margin-bottom:22px;
+    box-shadow: var(--shadow);
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--brand) 0%, #4f7fe8 100%);
+    width:0%;
+    transition: width .35s ease;
+  }
+
+  /* Card */
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius: var(--radius);
+    padding:28px 28px 24px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-top{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:16px; gap:12px; flex-wrap:wrap;
+  }
+  .qnum{font-size:13.5px; color:var(--ink-soft); font-weight:600; letter-spacing:.02em;}
+  .diff-badge{
+    font-size:11.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    padding:5px 11px; border-radius:999px; border:1px solid transparent;
+  }
+  .diff-easy{color:var(--easy); background:var(--easy-bg); border-color:#c7ebd4;}
+  .diff-medium{color:var(--medium); background:var(--medium-bg); border-color:#f3e0b0;}
+  .diff-hard{color:var(--hard); background:var(--hard-bg); border-color:#f4c9c9;}
+
+  .question-text{
+    font-size:18.5px; font-weight:600; line-height:1.5; color:var(--ink);
+    margin:4px 0 20px;
+  }
+
+  .options{display:flex; flex-direction:column; gap:10px;}
+
+  .option{
+    display:flex; align-items:flex-start; gap:12px;
+    background:var(--panel-2);
+    border:1.5px solid var(--line);
+    border-radius:12px;
+    padding:13px 15px;
+    cursor:pointer;
+    transition: all .15s ease;
+    text-align:left;
+  }
+  .option:hover:not(.locked){
+    border-color:#b9cdf0;
+    background:#e6edfb;
+    transform: translateY(-1px);
+  }
+  .option .letter{
+    flex:0 0 auto;
+    width:26px; height:26px; border-radius:50%;
+    background:#fff; border:1.5px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:700; color:var(--ink-soft);
+  }
+  .option .otext{font-size:15px; line-height:1.5; padding-top:2px; color:var(--ink);}
+
+  .option.correct-pick{
+    background:var(--good-bg); border-color:#a9dfbf;
+  }
+  .option.correct-pick .letter{background:var(--good); border-color:var(--good); color:#fff;}
+  .option.wrong-pick{
+    background:var(--bad-bg); border-color:#f0b3b3;
+  }
+  .option.wrong-pick .letter{background:var(--bad); border-color:var(--bad); color:#fff;}
+  .option.reveal-correct{
+    border-color:#a9dfbf; box-shadow: inset 0 0 0 1.5px #a9dfbf;
+  }
+
+  .feedback-banner{
+    display:none;
+    margin-top:18px; padding:12px 16px; border-radius:10px;
+    font-weight:700; font-size:14.5px; align-items:center; gap:8px;
+  }
+  .feedback-banner.show{display:flex;}
+  .feedback-banner.good{background:var(--good-bg); color:var(--good);}
+  .feedback-banner.bad{background:var(--bad-bg); color:var(--bad);}
+
+  .card-actions{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:24px; gap:10px; flex-wrap:wrap;
+  }
+  .score-tag{font-size:13.5px; color:var(--ink-soft); font-weight:600;}
+  .score-tag b{color:var(--brand-2);}
+
+  .btn{
+    border:none; cursor:pointer; font-weight:700; font-size:14.5px;
+    padding:11px 22px; border-radius:10px; transition: all .15s ease;
+  }
+  .btn-primary{background:var(--brand); color:#fff;}
+  .btn-primary:hover{background:var(--brand-2); transform: translateY(-1px);}
+  .btn-primary:disabled{background:#b9c8e6; cursor:not-allowed; transform:none;}
+  .btn-ghost{background:transparent; color:var(--ink-soft); border:1.5px solid var(--line);}
+  .btn-ghost:hover{border-color:#b9cdf0; color:var(--brand-2);}
+
+  /* Results */
+  .results{display:none; text-align:center;}
+  .results.show{display:block;}
+  .results .ring{
+    width:150px;height:150px;border-radius:50%;
+    margin:6px auto 18px;
+    display:flex;align-items:center;justify-content:center;
+    background: conic-gradient(var(--brand) calc(var(--pct,0)*1%), #e6edf9 0);
+    position:relative;
+  }
+  .results .ring::before{
+    content:""; position:absolute; inset:10px; background:#fff; border-radius:50%;
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .results .ring .num{position:relative; font-size:30px; font-weight:800; color:var(--brand-2);}
+  .results h2{font-size:22px; margin:6px 0 4px;}
+  .results p.sub{color:var(--ink-soft); font-size:14.5px; margin:0 0 22px;}
+
+  .breakdown{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:12px; max-width:520px; margin:0 auto 26px;
+  }
+  .bd-card{
+    border:1px solid var(--line); border-radius:12px; padding:14px 10px; background:var(--panel-2);
+  }
+  .bd-card .bd-label{font-size:11.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px;}
+  .bd-card .bd-num{font-size:20px; font-weight:800; color:var(--ink);}
+  .bd-easy .bd-label{color:var(--easy);}
+  .bd-medium .bd-label{color:var(--medium);}
+  .bd-hard .bd-label{color:var(--hard);}
+
+  .review-toggle{margin-bottom:10px;}
+
+  footer.note{
+    text-align:center; color:#8496a8; font-size:12.5px; margin-top:26px;
+  }
+
+  @media (max-width:560px){
+    .card{padding:20px 18px 18px;}
+    header{padding:22px 18px;}
+    header h1{font-size:20px;}
+    .breakdown{grid-template-columns:1fr; max-width:280px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Data Science Methodology · Lecture 1</div>
+    <h1>B O D Y  EDITION</h1>
+    <p>50 multiple-choice questions covering the full lecture: data science fundamentals, methodology, the CRISP-DM / KDD / IBM / lifecycle frameworks, business &amp; analytic understanding, and the four analytics types.</p>
+    <div class="meta-row">
+      <div class="pill">50 Questions</div>
+    </div>
+  </header>
+
+  <div class="progress-shell"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="card" id="quizCard">
+    <div class="card-top">
+      <div class="qnum" id="qnum">Question 1 of 60</div>
+      <div class="diff-badge" id="diffBadge">EASY</div>
+    </div>
+    <div class="question-text" id="questionText"></div>
+    <div class="options" id="optionsList"></div>
+    <div class="feedback-banner" id="feedbackBanner"></div>
+    <div class="card-actions">
+      <div class="score-tag">Score: <b id="liveScore">0</b> / <span id="liveTotal">50</span></div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-ghost" id="skipBtn">Skip</button>
+        <button class="btn btn-primary" id="nextBtn" disabled>Next Question</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card results" id="resultsCard">
+    <div class="ring" id="scoreRing"><div class="num" id="scorePct">0%</div></div>
+    <h2 id="resultsTitle">Quiz Complete</h2>
+    <p class="sub" id="resultsSub">You scored 0 out of 50</p>
+    <div class="breakdown">
+      <div class="bd-card bd-easy"><div class="bd-label">Easy</div><div class="bd-num" id="bdEasy">0/0</div></div>
+      <div class="bd-card bd-medium"><div class="bd-label">Medium</div><div class="bd-num" id="bdMedium">0/0</div></div>
+      <div class="bd-card bd-hard"><div class="bd-label">Hard</div><div class="bd-num" id="bdHard">0/0</div></div>
+    </div>
+    <button class="btn btn-primary" id="restartBtn">Retake Quiz</button>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [{"diff": "easy", "q": "Which technique data science uses to build predictive models?", "opts": ["Simple linear spreadsheets", "Complex machine learning algorithms", "Manual record keeping", "Basic word processing"], "correct": 1}, {"diff": "medium", "q": "The data used for analysis:", "opts": ["Must always come from a single, standardized source", "Can come from many different sources and be presented in various formats", "Is only valid if it is collected manually by analysts", "Cannot be reused once a report has been generated"], "correct": 1}, {"diff": "medium", "q": "Which set of activities associate with data science?", "opts": ["Extraction, preparation, analysis, visualization, and maintenance of information", "Only extraction and storage of raw files", "Only visualization and presentation design", "Only the maintenance of hardware infrastructure"], "correct": 0}, {"diff": "hard", "q": "Data science is a 'cross disciplinary field.' This phrase most directly supports which idea?", "opts": ["Data science relies only on computer science techniques", "Data science uses scientific methods drawn from multiple disciplines to draw insights from data", "Data science should be practiced only by statisticians", "Data science is a subfield with no relation to business decision-making"], "correct": 1}, {"diff": "easy", "q": "How does the lecture define a 'methodology'?", "opts": ["A specific software package used only for data cleaning", "A general strategy that guides the processes and activities within a given domain", "A single mathematical formula for predicting outcomes", "A type of database index used to speed up queries"], "correct": 1}, {"diff": "medium", "q": "Why does data science need a methodology?", "opts": ["Because methodologies eliminate the need for business stakeholders", "Because people working in data science routinely encounter it while finding answers to different questions every day", "Because it is legally required by data protection regulations", "Because it replaces the need for data collection"], "correct": 1}, {"diff": "medium", "q": "Data science methodology is a process that:", "opts": ["Is strictly linear and never revisited once started", "Indicates the routine for finding solutions to a specific problem", "Only applies to descriptive analytics tasks", "Is identical across every business regardless of the problem"], "correct": 1}, {"diff": "hard", "q": "Data science methodology is described as undergoing a 'critic behavior.' This best refers to:", "opts": ["A one-time evaluation performed only after deployment", "A cyclic process that guides business analysts and data scientists to act accordingly", "A behavior exclusive to software developers, not analysts", "A rule that forbids revisiting earlier stages"], "correct": 1}, {"diff": "easy", "q": "From the 'problem approach' questions, which is included?", "opts": ["What is the problem?", "Which data do you need?", "How is data visualized?", "What is the sales forecast?"], "correct": 0}, {"diff": "easy", "q": "Which question is listed under the 'problem approach' in the data science methodology?", "opts": ["Is the data representing the problem?", "How can you use data to solve this problem?", "What additional work is required with data?", "Modeling concepts"], "correct": 1}, {"diff": "medium", "q": "'Data preprocessing' appears as part of which set of questions?", "opts": ["The data approach questions", "The problem-solving questions", "The problem approach questions", "The framework comparison section"], "correct": 2}, {"diff": "medium", "q": "Which of the following is listed under the 'data approach' questions?", "opts": ["What is the problem?", "Where is the data coming from?", "Modeling concepts", "Putting the model into practice"], "correct": 1}, {"diff": "medium", "q": "Which question below is part of the 'data approach' list?", "opts": ["Is the data representing the problem?", "How can you use data to solve this problem?", "How is data visualized?", "Data preprocessing"], "correct": 0}, {"diff": "hard", "q": "Which question completes the data approach list alongside 'which data you need,' 'where is data coming from,' and 'is the data representing the problem'?", "opts": ["What additional work is required with the data?", "What is the problem?", "How is the model deployed?", "Which framework should be used?"], "correct": 0}, {"diff": "medium", "q": "Under 'Problem solving,' the lecture lists which set of concerns?", "opts": ["Business understanding, data understanding, and deployment", "How data is visualized, modeling concepts, and putting the model into practice", "CRISP-DM, KDD, and IBM methodology", "Descriptive, diagnostic, predictive, and prescriptive analytics"], "correct": 1}, {"diff": "easy", "q": "In the typical steps of a data science methodology, which stage comes first?", "opts": ["Data modeling", "Business understanding", "Deployment", "Evaluation"], "correct": 1}, {"diff": "easy", "q": "During the 'data understanding' stage, the data science team primarily:", "opts": ["Deploys the model into the production environment", "Identifies and collects the data required for analysis and explores its structure, quality, and completeness", "Cleans, transforms, and prepares data for analysis", "Selects modeling techniques and tunes parameters"], "correct": 1}, {"diff": "medium", "q": "Which stage is described as being 'critical to ensure that the data is in the right format and quality for analysis'?", "opts": ["Data preparation", "Business understanding", "Monitoring and maintenance", "Evaluation"], "correct": 0}, {"diff": "medium", "q": "In the data modeling stage, the data science team is described as doing all of the following EXCEPT:", "opts": ["Selecting appropriate modeling techniques", "Tuning model parameters", "Validating the model", "Defining the business problem and objectives"], "correct": 3}, {"diff": "medium", "q": "Which stage involves using 'various evaluation metrics to determine the effectiveness of the model and make improvements if necessary'?", "opts": ["Deployment", "Evaluation", "Data preparation", "Business understanding"], "correct": 1}, {"diff": "medium", "q": "The deployment stage involves:", "opts": ["Defining the business problem and objectives", "Deploying the model in the production environment, integrating it into business processes, and ensuring it works correctly", "Cleaning and transforming raw data", "Monitoring long-term performance after release"], "correct": 1}, {"diff": "medium", "q": "'Monitoring and Maintenance' involves:", "opts": ["Monitoring the model's performance in production and making necessary changes to keep it effective", "Defining objectives with business stakeholders", "Selecting the right algorithms for a new model", "Exploring data structure and completeness for the first time"], "correct": 0}, {"diff": "hard", "q": "Put the following typical steps in the correct order: (1) Data preparation, (2) Business understanding, (3) Evaluation, (4) Data understanding.", "opts": ["2, 4, 1, 3", "1, 2, 3, 4", "4, 2, 1, 3", "2, 1, 4, 3"], "correct": 0}, {"diff": "hard", "q": "A data science team has already defined the business problem and explored the raw data's quality and structure. what should they do next?", "opts": ["Deploy the model into production", "Clean, transform, and prepare the data for analysis", "Monitor performance in production", "Evaluate the model's business impact"], "correct": 1}, {"diff": "easy", "q": "Which of the following is NOT listed among the popular data science frameworks?", "opts": ["CRISP-DM", "KDD", "Agile Scrum", "IBM Data Science Methodology"], "correct": 2}, {"diff": "easy", "q": "Which of these is correct about the different popular frameworks?", "opts": ["They have completely unrelated goals with no overlap", "While the overall methodology is similar, different frameworks emphasize certain aspects", "Only one framework is considered valid today", "They apply only to descriptive analytics"], "correct": 1}, {"diff": "medium", "q": "What does 'CRISP-DM' stand for?", "opts": ["Cross-Industry Standard Process for Data Mining", "Central Repository for Information Systems and Data Management", "Customer Relationship Information System for Data Modeling", "Cross-Institution Standard Protocol for Digital Metrics"], "correct": 0}, {"diff": "medium", "q": "What does 'KDD' stand for?", "opts": ["Knowledge Discovery in Databases", "Key Data Definitions", "Knowledge Development and Deployment", "Kernel Density and Distribution"], "correct": 0}, {"diff": "medium", "q": "The lecture describes CRISP-DM as:", "opts": ["A 10-step process focused on defining the analytic approach before acquiring data", "One of the most detailed and well-known methodologies, covering the full cycle from business understanding to deployment", "A generalized academic term with 5 to 7 iterative steps", "A process broader than data mining, focused on extracting knowledge from data"], "correct": 1}, {"diff": "medium", "q": "KDD is described as:", "opts": ["A 10-step IBM-authored process", "A broader process than data mining, focusing on the higher-level goal of extracting useful knowledge from data", "A term mostly used in academia and tutorials", "One of the most detailed and well-known methodologies covering business understanding to deployment"], "correct": 1}, {"diff": "hard", "q": "Which framework is described as a '10-step process that places heavy emphasis on defining the problem and analytic approach before acquiring data'?", "opts": ["KDD", "Data science lifecycle", "IBM Data Science Methodology", "CRISP-DM"], "correct": 2}, {"diff": "hard", "q": "The 'data science lifecycle' term is:", "opts": ["A legally standardized process required by IBM", "A generalized term for a process with 5 to 7 iterative steps", "Identical in every detail to CRISP-DM", "Only applicable to prescriptive analytics projects"], "correct": 1}, {"diff": "medium", "q": "In the KDD process diagram, what is the correct order of stages from raw data to knowledge?", "opts": ["Selection, Preprocessing, Transformation, Data Mining, Interpretation/Evaluation, Knowledge", "Data Mining, Selection, Transformation, Preprocessing, Knowledge, Interpretation/Evaluation", "Transformation, Selection, Preprocessing, Knowledge, Data Mining, Interpretation/Evaluation", "Preprocessing, Selection, Data Mining, Transformation, Interpretation/Evaluation, Knowledge"], "correct": 0}, {"diff": "hard", "q": "In the KDD diagram, which stage directly follows 'Preprocessing' and directly precedes 'Data Mining'?", "opts": ["Selection", "Transformation", "Interpretation/Evaluation", "Knowledge"], "correct": 1}, {"diff": "medium", "q": "In the IBM Data Science Methodology diagram, which stage comes immediately after 'Business Understanding'?", "opts": ["Data Requirements", "Analytic Approach", "Data Collection", "Modeling"], "correct": 1}, {"diff": "easy", "q": "Before solving any problem in the business domain:", "opts": ["It should be skipped in favor of immediate modeling", "It needs to be understood properly", "It should be assigned only to data engineers", "It must first be approved by a regulatory body"], "correct": 1}, {"diff": "easy", "q": "Business understanding is described as forming:", "opts": ["A concrete base that further leads to easy resolution of queries", "An optional step that can be skipped for simple projects", "The final stage of the methodology", "A purely technical, non-business activity"], "correct": 0}, {"diff": "medium", "q": "The first step in the methodology, involves seeking needed clarification in order to:", "opts": ["Identify what problem is being solved", "Immediately deploy a prototype model", "Skip data preparation entirely", "Choose a programming language before anything else"], "correct": 0}, {"diff": "medium", "q": "Why it is important to seek clarification early in the business understanding stage?", "opts": ["Otherwise time and resources can be wasted moving in the wrong direction", "Because clarification is legally mandated before data collection", "Because it eliminates the need for evaluation later", "Because later stages cannot be revisited once started"], "correct": 0}, {"diff": "easy", "q": "Analytic understanding, involves deciding on:", "opts": ["The company's annual budget", "The analytical approach to follow, based on business understanding", "The physical location of the data center", "The employee performance review schedule"], "correct": 1}, {"diff": "easy", "q": "Which of these is one of the four analytic approaches?", "opts": ["Predictive approach", "Reactive approach", "Speculative approach", "Retrospective approach"], "correct": 0}, {"diff": "easy", "q": "The lecture defines 'data analytics' as referring to:", "opts": ["The techniques used to analyze data to enhance productivity and business gain", "A single tool for creating slideshows", "The physical hardware used to store servers", "A method for writing marketing copy"], "correct": 0}, {"diff": "hard", "q": "Regarding the tools and techniques used in data analytics, the lecture states that they:", "opts": ["Are fixed and identical for every organization", "Vary according to the organization or individual", "Are determined solely by government regulation", "Cannot include machine learning methods"], "correct": 1}, {"diff": "easy", "q": "Descriptive analytics is being used to:", "opts": ["Contextualize data to generate information", "Predict future stock prices with certainty", "Recommend the single best business action", "Replace the need for any data storage system"], "correct": 0}, {"diff": "easy", "q": "Diagnostic analytics, aims to:", "opts": ["Determine the cause of a phenomenon that occurred in the past", "Predict a customer's future purchases", "Recommend the best time to trade a stock", "Store raw transactional records only"], "correct": 0}, {"diff": "hard", "q": "In the diagnostic analytics diagram, data from an OLAP structure is processed by tools to enable which two types of analysis?", "opts": ["Roll up and drill down", "Selection and transformation", "Feedback and deployment", "Business and analytic understanding"], "correct": 0}, {"diff": "easy", "q": "Predictive analytics, works on predicting the outcomes of events based on:", "opts": ["Patterns, trends, and exceptions from historical and current data", "Random number generation with no data input", "Manually written opinion pieces", "The physical location of the analytics team"], "correct": 0}, {"diff": "hard", "q": "Compared to descriptive and diagnostic analytics, predictive analytics:", "opts": ["Requires less skillset and smaller datasets", "Requires more skillset and requires large datasets", "Cannot be used to identify risks or opportunities", "Is identical in complexity to descriptive analytics"], "correct": 1}, {"diff": "easy", "q": "Prescriptive analytics, builds upon the results of:", "opts": ["Descriptive analytics only", "Predictive analytics", "No prior analytics category", "Only raw textual data"], "correct": 1}, {"diff": "hard", "q": "In the prescriptive analytics diagram, the flow moves through 'Predictions,' 'Decisions,' and 'Effects,' answering questions about what will happen, how we benefit, and how decisions impact everything else. This makes prescriptive analytics:", "opts": ["The least valuable and least complex category", "Provides the most valuable outcome and requires the most advanced skillset", "Equivalent in value to descriptive analytics", "Unrelated to predictive analytics"], "correct": 1}];
+
+// Fisher-Yates shuffle for question order (options keep original balanced-index layout from build time)
+function shuffle(arr){
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+let order = shuffle(QUESTIONS.map((_, i) => i));
+let current = 0;
+let score = 0;
+let answered = false;
+let selectedIndex = null;
+const results = []; // {diff, correct: bool, skipped: bool}
+
+const letters = ['A','B','C','D'];
+
+const qnumEl = document.getElementById('qnum');
+const diffBadgeEl = document.getElementById('diffBadge');
+const questionTextEl = document.getElementById('questionText');
+const optionsListEl = document.getElementById('optionsList');
+const feedbackBannerEl = document.getElementById('feedbackBanner');
+const nextBtn = document.getElementById('nextBtn');
+const skipBtn = document.getElementById('skipBtn');
+const liveScoreEl = document.getElementById('liveScore');
+const progressFill = document.getElementById('progressFill');
+const quizCard = document.getElementById('quizCard');
+const resultsCard = document.getElementById('resultsCard');
+
+function diffClass(d){ return d === 'easy' ? 'diff-easy' : d === 'medium' ? 'diff-medium' : 'diff-hard'; }
+
+function renderQuestion(){
+  answered = false;
+  selectedIndex = null;
+  nextBtn.disabled = true;
+  nextBtn.textContent = current === order.length - 1 ? 'Finish Quiz' : 'Next Question';
+  feedbackBannerEl.className = 'feedback-banner';
+  feedbackBannerEl.textContent = '';
+
+  const q = QUESTIONS[order[current]];
+  document.getElementById('qnum').textContent = `Question ${current + 1} of ${order.length}`;
+  diffBadgeEl.textContent = q.diff.toUpperCase();
+  diffBadgeEl.className = 'diff-badge ' + diffClass(q.diff);
+  questionTextEl.textContent = q.q;
+
+  optionsListEl.innerHTML = '';
+  q.opts.forEach((opt, idx) => {
+    const optDiv = document.createElement('div');
+    optDiv.className = 'option';
+    optDiv.dataset.idx = idx;
+    optDiv.innerHTML = `
+      <div class="letter">${letters[idx]}</div>
+      <div style="flex:1;">
+        <div class="otext">${opt}</div>
+      </div>
+    `;
+    optDiv.addEventListener('click', () => selectOption(idx));
+    optionsListEl.appendChild(optDiv);
+  });
+
+  progressFill.style.width = ((current) / order.length * 100) + '%';
+  liveScoreEl.textContent = score;
+}
+
+function selectOption(idx){
+  if(answered) return;
+  answered = true;
+  selectedIndex = idx;
+  const q = QUESTIONS[order[current]];
+  const isCorrect = idx === q.correct;
+
+  const optionDivs = Array.from(optionsListEl.children);
+  optionDivs.forEach((div, i) => {
+    div.classList.add('locked');
+    if(i === q.correct){
+      div.classList.add(i === idx ? 'correct-pick' : 'reveal-correct');
+    }
+    if(i === idx && !isCorrect){
+      div.classList.add('wrong-pick');
+    }
+  });
+
+  feedbackBannerEl.classList.add('show');
+  if(isCorrect){
+    score++;
+    liveScoreEl.textContent = score;
+    feedbackBannerEl.classList.add('good');
+    feedbackBannerEl.textContent = '✓ Correct!';
+  } else {
+    feedbackBannerEl.classList.add('bad');
+    feedbackBannerEl.textContent = `✗ Not quite — the correct answer is ${letters[q.correct]}.`;
+  }
+
+  results.push({diff: q.diff, correct: isCorrect, skipped: false});
+  nextBtn.disabled = false;
+}
+
+function skipQuestion(){
+  if(answered) return;
+  const q = QUESTIONS[order[current]];
+  results.push({diff: q.diff, correct: false, skipped: true});
+  answered = true;
+
+  const optionDivs = Array.from(optionsListEl.children);
+  optionDivs.forEach((div, i) => {
+    div.classList.add('locked');
+    if(i === q.correct){
+      div.classList.add('reveal-correct');
+    }
+  });
+  feedbackBannerEl.classList.add('show');
+  feedbackBannerEl.classList.add('bad');
+  feedbackBannerEl.textContent = `Skipped — the correct answer is ${letters[q.correct]}.`;
+  nextBtn.disabled = false;
+}
+
+function nextQuestion(){
+  if(!answered) return;
+  if(current < order.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    finishQuiz();
+  }
+}
+
+function finishQuiz(){
+  progressFill.style.width = '100%';
+  quizCard.style.display = 'none';
+  resultsCard.classList.add('show');
+
+  const total = order.length;
+  const pct = Math.round((score / total) * 100);
+  document.getElementById('scoreRing').style.setProperty('--pct', pct);
+  document.getElementById('scorePct').textContent = pct + '%';
+  document.getElementById('resultsSub').textContent = `You scored ${score} out of ${total}`;
+
+  let title = 'Keep Practicing';
+  if(pct >= 90) title = 'Outstanding — Exam Ready!';
+  else if(pct >= 75) title = 'Great Work!';
+  else if(pct >= 60) title = 'Good Progress';
+  document.getElementById('resultsTitle').textContent = title;
+
+  const byDiff = {easy:{c:0,t:0}, medium:{c:0,t:0}, hard:{c:0,t:0}};
+  results.forEach(r => {
+    byDiff[r.diff].t++;
+    if(r.correct) byDiff[r.diff].c++;
+  });
+  document.getElementById('bdEasy').textContent = `${byDiff.easy.c}/${byDiff.easy.t}`;
+  document.getElementById('bdMedium').textContent = `${byDiff.medium.c}/${byDiff.medium.t}`;
+  document.getElementById('bdHard').textContent = `${byDiff.hard.c}/${byDiff.hard.t}`;
+}
+
+function restartQuiz(){
+  order = shuffle(QUESTIONS.map((_, i) => i));
+  current = 0;
+  score = 0;
+  results.length = 0;
+  resultsCard.classList.remove('show');
+  quizCard.style.display = 'block';
+  renderQuestion();
+}
+
+nextBtn.addEventListener('click', nextQuestion);
+skipBtn.addEventListener('click', skipQuestion);
+document.getElementById('restartBtn').addEventListener('click', restartQuiz);
+
+renderQuestion();
+</script>
+</body>
+</html>
